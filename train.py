@@ -84,7 +84,6 @@ def main(argv):
         default="lstm",
         help="Model to train.")
     args = parser.parse_args()
-
     lag = 12
     config = {"batch": 256, "epochs": 600}
     file1 = 'data/train.csv'
@@ -103,6 +102,10 @@ def main(argv):
         X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1]))
         m = model.get_saes([12, 400, 400, 400, 1])
         train_seas(m, X_train, y_train, args.model, config)
+    if args.model == 'srnn':
+        X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
+        m = model.get_srnn([12, 64, 64, 1])
+        train_model(m, X_train, y_train, args.model, config)
 
 
 if __name__ == '__main__':

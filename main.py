@@ -110,7 +110,7 @@ def main():
 
     y_preds = []
     for name, model in zip(names, models):
-        if name == 'SAEs':
+        if name == 'SAEs' or name == "SimpleRNN":
             X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1]))
         else:
             X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))

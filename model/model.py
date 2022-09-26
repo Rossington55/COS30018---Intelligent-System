@@ -28,7 +28,7 @@ def get_srnn(units):
     #print(model.summary())
     
     return model
-s
+
 def get_lstm(units):
     """LSTM(Long Short-Term Memory)
     Build LSTM Model.

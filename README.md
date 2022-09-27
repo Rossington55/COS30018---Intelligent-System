@@ -42,7 +42,7 @@ These are the details for the traffic flow prediction experiment.
 | LSTM | 7.21 | 98.05 | 9.90 | 16.56% | 0.9396 | 0.9419 |
 | GRU | 7.20 | 99.32 | 9.97| 16.78% | 0.9389 | 0.9389|
 | SAEs | 7.06 | 92.08 | 9.60 | 17.80% | 0.9433 | 0.9442 |
-| SimpleRNN | ? | ? | ? | ? | ? | ? |
+| SimpleRNN | 7.58 | 104.96 | 10.24 | 20.47% | 0.9353 | 0.9386 |
 
 ![evaluate](/images/eva.png)
 

@@ -1,10 +1,33 @@
 """
 Defination of NN model
 """
-from keras.layers import Dense, Dropout, Activation
-from keras.layers.recurrent import LSTM, GRU
+from tensorflow import keras
+from keras.layers import Dense, Dropout, Activation, SimpleRNN, LSTM, GRU
+#from keras.layers.recurrent import LSTM, GRU
 from keras.models import Sequential
 
+
+#If input is < 0 'relu' converts input to be 0. All other positive inputs are unchanged
+def get_srnn(units):
+    
+    """SimpleRNN(Simple recurrent neural network)
+    Build SimpleRNN Model.
+
+    # Arguments
+        units: List(int), number of input, output and hidden units.
+    # Returns
+        model: Model, nn model.
+    """
+    
+    model = Sequential()
+    model.add(SimpleRNN(units[1], input_shape=(units[0], 1), return_sequences=True))
+    model.add(SimpleRNN(units[2]))
+    model.add(Dropout(0.2))
+    model.add(Dense(units[3], activation='relu'))
+    
+    #print(model.summary())
+    
+    return model
 
 def get_lstm(units):
     """LSTM(Long Short-Term Memory)
@@ -91,3 +114,6 @@ def get_saes(layers):
     models = [sae1, sae2, sae3, saes]
 
     return models
+
+
+    

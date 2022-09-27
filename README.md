@@ -1,5 +1,5 @@
 # Traffic Flow Prediction
-Traffic Flow Prediction with Neural Networks(SAEs、LSTM、GRU).
+Traffic Flow Prediction with Neural Networks(SAEs、LSTM、GRU, SimpleRNN).
 
 ## Requirement
 - Python 3.6    
@@ -15,7 +15,7 @@ Traffic Flow Prediction with Neural Networks(SAEs、LSTM、GRU).
 python train.py --model model_name
 ```
 
-You can choose "lstm", "gru" or "saes" as arguments. The ```.h5``` weight file was saved at model folder.
+You can choose "lstm", "gru", "saes" or "srnn" as arguments. The ```.h5``` weight file was saved at model folder.
 
 
 ## Experiment
@@ -42,6 +42,7 @@ These are the details for the traffic flow prediction experiment.
 | LSTM | 7.21 | 98.05 | 9.90 | 16.56% | 0.9396 | 0.9419 |
 | GRU | 7.20 | 99.32 | 9.97| 16.78% | 0.9389 | 0.9389|
 | SAEs | 7.06 | 92.08 | 9.60 | 17.80% | 0.9433 | 0.9442 |
+| SimpleRNN | ? | ? | ? | ? | ? | ? |
 
 ![evaluate](/images/eva.png)
 

@@ -90,22 +90,22 @@ def main(argv):
     file2 = 'data/test.csv'
     X_train, y_train, _, _, _ = process_data(file1, file2, lag)
 
-    if args.model == 'lstm':
-        X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
-        m = model.get_lstm([12, 64, 64, 1])
-        train_model(m, X_train, y_train, args.model, config)
-    if args.model == 'gru':
-        X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
-        m = model.get_gru([12, 64, 64, 1])
-        train_model(m, X_train, y_train, args.model, config)
-    if args.model == 'saes':
-        X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1]))
-        m = model.get_saes([12, 400, 400, 400, 1])
-        train_seas(m, X_train, y_train, args.model, config)
-    if args.model == 'srnn':
-        X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
-        m = model.get_srnn([12, 64, 64, 1])
-        train_model(m, X_train, y_train, args.model, config)
+    # if args.model == 'lstm':
+    #     X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
+    #     m = model.get_lstm([12, 64, 64, 1])
+    #     train_model(m, X_train, y_train, args.model, config)
+    # if args.model == 'gru':
+    #     X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
+    #     m = model.get_gru([12, 64, 64, 1])
+    #     train_model(m, X_train, y_train, args.model, config)
+    # if args.model == 'saes':
+    #     X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1]))
+    #     m = model.get_saes([12, 400, 400, 400, 1])
+    #     train_seas(m, X_train, y_train, args.model, config)
+    # if args.model == 'srnn':
+    #     X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
+    #     m = model.get_srnn([12, 64, 64, 1])
+    #     train_model(m, X_train, y_train, args.model, config)
 
 
 if __name__ == '__main__':

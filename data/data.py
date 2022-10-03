@@ -8,12 +8,8 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler
 import datetime as dt
 
 
-train = 'data1.xls'
-test = 'data1.xls'
-lags = 12
-locationSearch = 2820
 
-def process_data(train, test, lags, locationSearch):
+def process_data(train, test, lags):
 
     """Process data
     Reshape and split train\test data.
@@ -75,8 +71,12 @@ def process_data(train, test, lags, locationSearch):
     
     pivotData['# Lane Points']=1
     pivotData['% Observed']=100
+    pivotData.rename(columns = {'value':'Lane 1 Flow (Veh/5 Minutes)'}, inplace = True)
+    pivotData.rename(columns = {'Date':'5 Minutes'}, inplace = True)
 
-    print(pivotData)
+    # print(pivotData)
+    df1 = pivotData
+    df2 = pivotData
 
     #filter data framne to reduce columns to only whats required (compared to the supplied working data)
     #Cleaning - remove unwanted columns
@@ -87,28 +87,28 @@ def process_data(train, test, lags, locationSearch):
     
     #shuffle
 
-    # scaler = StandardScaler().fit(df1[attr].values)
-    # scaler = MinMaxScaler(feature_range=(0, 1)).fit(df1[attr].values.reshape(-1, 1))
-    # flow1 = scaler.transform(df1[attr].values.reshape(-1, 1)).reshape(1, -1)[0]
-    # flow2 = scaler.transform(df2[attr].values.reshape(-1, 1)).reshape(1, -1)[0]
+    scaler = StandardScaler().fit(df1[attr].values)
+    scaler = MinMaxScaler(feature_range=(0, 1)).fit(df1[attr].values.reshape(-1, 1))
+    flow1 = scaler.transform(df1[attr].values.reshape(-1, 1)).reshape(1, -1)[0]
+    flow2 = scaler.transform(df2[attr].values.reshape(-1, 1)).reshape(1, -1)[0]
 
-    # # train, test = [], []
-    # for i in range(lags, len(flow1)):
-    #     train.append(flow1[i - lags: i + 1])
-    # for i in range(lags, len(flow2)):
-    #     test.append(flow2[i - lags: i + 1])
+    # train, test = [], []
+    for i in range(lags, len(flow1)):
+        train.append(flow1[i - lags: i + 1])
+    for i in range(lags, len(flow2)):
+        test.append(flow2[i - lags: i + 1])
 
-    # train = np.array(train)
-    # test = np.array(test)
-    # np.random.shuffle(train)
+    train = np.array(train)
+    test = np.array(test)
+    np.random.shuffle(train)
 
-    # X_train = train[:, :-1]
-    # y_train = train[:, -1]
-    # X_test = test[:, :-1]
-    # y_test = test[:, -1]
+    X_train = train[:, :-1]
+    y_train = train[:, -1]
+    X_test = test[:, :-1]
+    y_test = test[:, -1]
 
-    # return X_train, y_train, X_test, y_test, scaler
+    return X_train, y_train, X_test, y_test, scaler
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
 
-    process_data(train, test, lags, locationSearch)
+#     process_data(train, test, lags, locationSearch)

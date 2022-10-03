@@ -87,7 +87,9 @@ def process_data(train, test, lags):
     
     #shuffle
 
-    # scaler = StandardScaler().fit(df1[attr].values)
+
+    scaler = StandardScaler().fit(df1[attr].values)
+
     scaler = MinMaxScaler(feature_range=(0, 1)).fit(df1[attr].values.reshape(-1, 1))
     flow1 = scaler.transform(df1[attr].values.reshape(-1, 1)).reshape(1, -1)[0]
     flow2 = scaler.transform(df2[attr].values.reshape(-1, 1)).reshape(1, -1)[0]

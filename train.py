@@ -86,8 +86,8 @@ def main(argv):
     args = parser.parse_args()
     lag = 12
     config = {"batch": 256, "epochs": 600}
-    file1 = 'data/train.csv'
-    file2 = 'data/test.csv'
+    file1 = 'data/data1.xls'
+    file2 = 'data/data1.xls'
     X_train, y_train, _, _, _ = process_data(file1, file2, lag)
 
     if args.model == 'lstm':

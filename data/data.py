@@ -76,7 +76,7 @@ def process_data(train, test, lags):
 
     # print(pivotData)
     df1 = pivotData
-    df2 = pivotData
+    df2 = pivotData 
 
     #filter data framne to reduce columns to only whats required (compared to the supplied working data)
     #Cleaning - remove unwanted columns

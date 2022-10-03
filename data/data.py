@@ -65,9 +65,9 @@ def process_data(train, test, lags):
     # pivotData = pivotData.where(pivotData['SCATS Number'] == locationSearch)
 
     #removes unneeded columns.
-    pivotData.drop(columns=pivotData.columns[[1]], 
-    axis=1, 
-    inplace=True)
+    # pivotData.drop(columns=pivotData.columns[[1]], 
+    # axis=1, 
+    # inplace=True)
     
     pivotData['# Lane Points']=1
     pivotData['% Observed']=100
@@ -75,8 +75,8 @@ def process_data(train, test, lags):
     pivotData.rename(columns = {'Date':'5 Minutes'}, inplace = True)
 
     # print(pivotData)
-    df1 = pivotData
-    df2 = pivotData 
+    df1 = pivotData.where(pivotData['SCATS Number'] == 970).dropna()
+    df2 = pivotData.where(pivotData['SCATS Number'] == 970).dropna()
     print(df1)
     #filter data framne to reduce columns to only whats required (compared to the supplied working data)
     #Cleaning - remove unwanted columns
@@ -108,6 +108,7 @@ def process_data(train, test, lags):
     y_test = test[:, -1]
 
     return X_train, y_train, X_test, y_test, scaler
+    # return 0
 
 # if __name__ == '__main__':
 

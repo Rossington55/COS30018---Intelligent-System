@@ -7,9 +7,13 @@ import sys
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 import datetime as dt
 
+def get_scats_list(train):
+    df = pd.read_excel(train, sheet_name='Data', skiprows=1).fillna(0)
+    df = df.drop_duplicates(subset=['SCATS Number'])
+    df = df[['SCATS Number']]
+    return df.to_numpy()
 
-
-def process_data(train, test, lags):
+def process_data(train, test, lags, scat_number):
 
     """Process data
     Reshape and split train\test data.
@@ -18,6 +22,7 @@ def process_data(train, test, lags):
         train: String, name of .csv train file.
         test: String, name of .csv test file.
         lags: integer, time lag.
+        scat_number: SCAT Number of the site to be trained
     # Returns
         X_train: ndarray.
         y_train: ndarray.
@@ -75,8 +80,8 @@ def process_data(train, test, lags):
     pivotData.rename(columns = {'Date':'5 Minutes'}, inplace = True)
 
     # print(pivotData)
-    df1 = pivotData.where(pivotData['SCATS Number'] == 970).dropna()
-    df2 = pivotData.where(pivotData['SCATS Number'] == 970).dropna()
+    df1 = pivotData.where(pivotData['SCATS Number'] == scat_number).dropna()
+    df2 = pivotData.where(pivotData['SCATS Number'] == scat_number).dropna()
     print(df1)
     #filter data framne to reduce columns to only whats required (compared to the supplied working data)
     #Cleaning - remove unwanted columns
@@ -88,7 +93,7 @@ def process_data(train, test, lags):
     #shuffle
 
 
-    scaler = StandardScaler().fit(df1[attr].values)
+    #scaler = StandardScaler().fit(df1[attr].values)
 
     scaler = MinMaxScaler(feature_range=(0, 1)).fit(df1[attr].values.reshape(-1, 1))
     flow1 = scaler.transform(df1[attr].values.reshape(-1, 1)).reshape(1, -1)[0]

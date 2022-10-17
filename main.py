@@ -71,8 +71,9 @@ def plot_results(y_true, y_preds, names, scat):
         y_pred: List/ndarray, predicted data.
         names: List, Method names.
     """
-    d = '2016-3-4 00:00'
-    x = pd.date_range(d, periods=288, freq='5min')
+
+    d = '2006-1-10 00:00'
+    x = pd.date_range(d, periods=96, freq='15min')
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
@@ -90,8 +91,9 @@ def plot_results(y_true, y_preds, names, scat):
     date_format = mpl.dates.DateFormatter("%H:%M")
     ax.xaxis.set_major_formatter(date_format)
     fig.autofmt_xdate()
-
+    plt.savefig('foo.png')
     plt.show()
+   
 
 
 def main():
@@ -111,7 +113,7 @@ def main():
         print(num[0])
         _, _, X_test, y_test, scaler = process_data(file1, file2, lag, num[0])
         y_test = scaler.inverse_transform(y_test.reshape(-1, 1)).reshape(1, -1)[0]
-
+        
         y_preds = []
         for name, model in zip(names, models):
             if name == 'SAEs' or name == "SimpleRNN":
@@ -123,11 +125,12 @@ def main():
             plot_model(mdl, to_file=file, show_shapes=True)
             predicted = mdl.predict(X_test)
             predicted = scaler.inverse_transform(predicted.reshape(-1, 1)).reshape(1, -1)[0]
-            y_preds.append(predicted[:288])
+            y_preds.append(predicted[:96])
             print(name)
             eva_regress(y_test, predicted)
-
-        plot_results(y_test[: 288], y_preds, names, num[0])
+        
+        plot_results(y_test[: 96], y_preds, names, num[0])
+        
 
 
 if __name__ == '__main__':

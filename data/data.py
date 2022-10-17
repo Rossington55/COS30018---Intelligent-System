@@ -33,12 +33,8 @@ def process_data(train, test, lags, scat_number):
     #encoding='utf-8'
     attr = 'Lane 1 Flow (Veh/5 Minutes)'
 
-
-
     df1 = pd.read_excel(train, sheet_name='Data', skiprows=0).fillna(0)
-
     dfHeaders = pd.read_excel(train, sheet_name='Data', skiprows=1).fillna(0)
-
     df2 = pd.read_excel(test, sheet_name='Data', skiprows=0).fillna(0)
     
     timeColumnNames = df1
@@ -47,26 +43,21 @@ def process_data(train, test, lags, scat_number):
     timeColumnNames.drop(columns=timeColumnNames.columns[[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]], 
         axis=1, 
         inplace=True)
-
-    dateColumn = dfHeaders[['Date', 'SCATS Number']]
-    
+   
+    dateColumn = dfHeaders[['Date', 'SCATS Number', 'HF VicRoads Internal']]
     timeColumnNames = timeColumnNames.iloc[:1]
-
     timeColumns = df1
-
     timeColumns.drop(columns=timeColumns.columns[[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]], 
     axis=1, 
     inplace=True)
-
     timeColumns = timeColumns[1:]
-
     # df_LocationMapping = df1.drop_duplicates('SCATS Number')
     # df_LocationMapping = df_LocationMapping[['SCATS Number', 'Location']]
 
     new = pd.merge(dateColumn, timeColumns, left_index=True, right_index=True)
-
-    pivotData = pd.melt(new, id_vars=['Date', 'SCATS Number'], value_vars=timeColumnNames)
-
+   
+    pivotData = pd.melt(new, id_vars=['Date', 'SCATS Number', 'HF VicRoads Internal'], value_vars=timeColumnNames)
+    
     # pivotData = pivotData.where(pivotData['SCATS Number'] == locationSearch)
 
     #removes unneeded columns.
@@ -78,11 +69,11 @@ def process_data(train, test, lags, scat_number):
     pivotData['% Observed']=100
     pivotData.rename(columns = {'value':'Lane 1 Flow (Veh/5 Minutes)'}, inplace = True)
     pivotData.rename(columns = {'Date':'5 Minutes'}, inplace = True)
-
-    # print(pivotData)
+    #scatsSites = pivotData['SCATS Number'].tolist()
     df1 = pivotData.where(pivotData['SCATS Number'] == scat_number).dropna()
     df2 = pivotData.where(pivotData['SCATS Number'] == scat_number).dropna()
-    print(df1)
+    df2 = df1.sort_values(by=['5 Minutes', 'HF VicRoads Internal','variable'])
+
     #filter data framne to reduce columns to only whats required (compared to the supplied working data)
     #Cleaning - remove unwanted columns
     # pivot table into same format as supplied data 
@@ -113,7 +104,7 @@ def process_data(train, test, lags, scat_number):
     y_train = train[:, -1]
     X_test = test[:, :-1]
     y_test = test[:, -1]
-
+    
     return X_train, y_train, X_test, y_test, scaler
     # return 0
 

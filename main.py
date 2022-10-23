@@ -97,10 +97,10 @@ def plot_results(y_true, y_preds, names, scat):
 
 
 def main():
-    lstm = 'model/lstm'
-    gru = 'model/gru'
-    saes = 'model/saes'
-    rnn = 'model/srnn'
+    lstm = 'model/lstm/'
+    gru = 'model/gru/'
+    saes = 'model/saes/'
+    rnn = 'model/srnn/'
     
     models = [lstm, gru, saes, rnn]
     names = ['LSTM', 'GRU', 'SAEs', 'SimpleRNN']

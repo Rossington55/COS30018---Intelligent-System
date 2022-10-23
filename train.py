@@ -34,9 +34,9 @@ def train_model(model, X_train, y_train, name, config, scat_number):
         epochs=config["epochs"],
         validation_split=0.05)
 
-    model.save('model/' + name + str(scat_number) + '.h5')
+    model.save('model/' + name + '/' + str(scat_number) + '.h5')
     df = pd.DataFrame.from_dict(hist.history)
-    df.to_csv('model/' + name + str(scat_number) + ' loss.csv', encoding='utf-8', index=False)
+    df.to_csv('model/' + name + '/' + str(scat_number) + ' loss.csv', encoding='utf-8', index=False)
 
 
 def train_seas(models, X_train, y_train, name, config, scat_number):

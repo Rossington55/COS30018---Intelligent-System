@@ -94,7 +94,25 @@ def plot_results(y_true, y_preds, names, scat):
     plt.savefig('foo.png')
     plt.show()
    
+def distance_betweeen(long1,lat1,long2,lat2):
+    LAT_corrected = lat1 + 0.00155
+    LONG_corrected = long1 + 0.00113
+    LAT_corrected2 = lat2 + 0.00155
+    LONG_corrected2 = long2 + 0.00113
+    R = 6371 #Radius of earth in km
+    dLat = deg_to_rad(LAT_corrected2-LAT_corrected)
+    dLon = deg_to_rad(LONG_corrected2-LONG_corrected)
+    a = math.sin(dLat/2) * math.sin(dLat/2) + math.cos(deg_to_rad(LAT_corrected)) * math.cos(deg_to_rad(LAT_corrected2)) * math.sin(dLon/2) * math.sin(dLon/2)
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+    d = R * c 
+    return d
 
+def deg_to_rad(deg):
+    return deg*(math.pi/180)
+
+def speed_at_flow(flow):
+    x = 8 * (math.sqrt(-10*(flow-1000))+100)
+    return x/25
 
 def main():
     lstm = 'model/lstm/'

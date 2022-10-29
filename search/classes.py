@@ -7,13 +7,9 @@ class Node:
         self._long = long
         self._lat = lat
         self._connections = connections
+        self._adjNodes = getadjnodes(connections)
 
         
-    #temp coordinate system to represent lon/lat
-    def get_x(self):
-        return self._x
-    def get_y(self):
-        return self._y
     def get_scat_number(self):
         return self._x
     def get_longitude(self):
@@ -22,11 +18,11 @@ class Node:
         return self._x
     def get_connections(self):
         return self._y
-    #generate loc from given coordinates in constructor
-    def set_loc(self, value):
-        self._loc = value
-    def get_loc(self):
-        return self._loc
+
+    #to add
+    #method to get distance to starting node
+    #method to get distance to end node
+    #method to get list of connecting nodes to current node
     
     #properties used by search algo
     def set_parentNode(self, value):
@@ -48,6 +44,9 @@ class Node:
         self._distToStart = value  
     def get_distToStart(self):
         return self._distToStart
+    
+    def get_adjNodes(self):
+        return self._adjNodes
     
     
     #collection of all interconnecting streets as nodes

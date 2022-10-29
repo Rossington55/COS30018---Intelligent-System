@@ -4,9 +4,7 @@ def distToGoal(node):
     return node.distToGoal
 
 
-def aStarSearch(map):
-    start = map.get_start()
-    end = map.get_end()
+def aStarSearch(start, end):
     searchedNodes = []
     goalReached = False
     

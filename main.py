@@ -98,31 +98,14 @@ def plot_results(y_true, y_preds, names, scat):
     plt.savefig('foo.png')
     plt.show()
    
-def distance_betweeen(long1,lat1,long2,lat2):
-    LAT_corrected = lat1 + 0.00155
-    LONG_corrected = long1 + 0.00113
-    LAT_corrected2 = lat2 + 0.00155
-    LONG_corrected2 = long2 + 0.00113
-    R = 6371 #Radius of earth in km
-    dLat = deg_to_rad(LAT_corrected2-LAT_corrected)
-    dLon = deg_to_rad(LONG_corrected2-LONG_corrected)
-    a = math.sin(dLat/2) * math.sin(dLat/2) + math.cos(deg_to_rad(LAT_corrected)) * math.cos(deg_to_rad(LAT_corrected2)) * math.sin(dLon/2) * math.sin(dLon/2)
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
-    d = R * c 
-    return d
-
-def deg_to_rad(deg):
-    return deg*(math.pi/180)
-
-def speed_at_flow(flow):
-    x = 8 * (math.sqrt(-10*(flow-1000))+100)
-    return x/25
 
 def initialise_map(file):
     nodes = []
     for scat in get_scats_list(file):
         node_data = process_node(file, scat)
         nodes.append(Node(node_data[0], node_data[1], node_data[2], node_data[3]))
+        
+    return nodes
 
 def main():
     lstm = 'model/lstm/'
@@ -156,10 +139,13 @@ def main():
             predicted = scaler.inverse_transform(predicted.reshape(-1, 1)).reshape(1, -1)[0]
             y_preds.append(predicted[:96])
             print(name)
+            print(y_preds)
             eva_regress(y_test, predicted)
         
-        plot_results(y_test[: 96], y_preds, names, num[0])
-        
+    
+        # plot_results(y_test[: 96], y_preds, names, num[0])
+    nodes = initialise_map(file1)
+    #
 
 
 if __name__ == '__main__':

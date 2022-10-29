@@ -88,7 +88,7 @@ def main(argv):
         help="Model to train.")
     args = parser.parse_args()
     lag = 12
-    config = {"batch": 256, "epochs": 3}
+    config = {"batch": 256, "epochs": 100}
     file1 = 'data/data1.xls'
     file2 = 'data/data1.xls'
 

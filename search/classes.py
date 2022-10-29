@@ -1,13 +1,26 @@
 
 class Node:
-    def __init__(self, X, Y):
+    def __init__(self, X, Y, scat, long, lat, connections):
         self._x = X
         self._y = Y
+        self._scat = scat
+        self._long = long
+        self._lat = lat
+        self._connections = connections
+
         
     #temp coordinate system to represent lon/lat
     def get_x(self):
         return self._x
     def get_y(self):
+        return self._y
+    def get_scat_number(self):
+        return self._x
+    def get_longitude(self):
+        return self._y
+    def get_latitude(self):
+        return self._x
+    def get_connections(self):
         return self._y
     #generate loc from given coordinates in constructor
     def set_loc(self, value):

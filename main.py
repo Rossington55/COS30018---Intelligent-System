@@ -5,13 +5,14 @@ import math
 import warnings
 import numpy as np
 import pandas as pd
-from data.data import process_data, get_scats_list
+from data.data import process_data, get_scats_list, process_node
 from keras.models import load_model
 from keras.utils.vis_utils import plot_model
 import sklearn.metrics as metrics
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from tqdm import tqdm
+from classes import Node, Map
 warnings.filterwarnings("ignore")
 
 
@@ -116,6 +117,12 @@ def deg_to_rad(deg):
 def speed_at_flow(flow):
     x = 8 * (math.sqrt(-10*(flow-1000))+100)
     return x/25
+
+def initialise_map(file):
+    nodes = []
+    for scat in get_scats_list(file):
+        node_data = process_node(file, scat)
+        nodes.append(Node(node_data[0], node_data[1], node_data[2], node_data[3]))
 
 def main():
     lstm = 'model/lstm/'

@@ -180,7 +180,7 @@ def sort_streets_by_direction(df_streets, direction, long, lat):
         emp = []
         return emp
 
-def process_map(file, scat):
+def process_node(file, scat):
     df1 = pd.read_excel(file, sheet_name='Data', skiprows=1).fillna(0)
     df1 = df1.drop_duplicates(subset=['Location'])
     df1 = df1[['SCATS Number', 'Location', 'NB_LATITUDE', 'NB_LONGITUDE']] # Get just the SCAT Num, Streets, Long and Lat

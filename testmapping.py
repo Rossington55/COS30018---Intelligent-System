@@ -5,7 +5,7 @@ import math
 import warnings
 import numpy as np
 import pandas as pd
-from data.data import process_map, get_scats_list
+from data.data import process_node, get_scats_list
 from keras.models import load_model
 from keras.utils.vis_utils import plot_model
 import sklearn.metrics as metrics
@@ -17,7 +17,7 @@ def main():
     file1 = 'data/data1.xls'
 
     for scat in get_scats_list(file1):
-        node = process_map(file1, scat[0])
+        node = process_node(file1, scat[0])
         print('SCAT : ' + str(node[0]))
         print('Longitude : ' + str(node[1]))
         print('Latitude : ' + str(node[2]))

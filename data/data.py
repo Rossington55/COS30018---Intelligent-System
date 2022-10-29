@@ -184,10 +184,9 @@ def process_map(file, scat):
     df1 = pd.read_excel(file, sheet_name='Data', skiprows=1).fillna(0)
     df1 = df1.drop_duplicates(subset=['Location'])
     df1 = df1[['SCATS Number', 'Location', 'NB_LATITUDE', 'NB_LONGITUDE']] # Get just the SCAT Num, Streets, Long and Lat
-
-    df_val = df1.drop_duplicates(subset=['SCATS Number'])
-    for row in df_val.to_numpy():
-        if (row[0] == scat):
+    # df_val = df1.drop_duplicates(subset=['SCATS Number'])
+    for row in df1.to_numpy():
+        if ((row[0] == scat) and (row[3] != 0) and (row[2] != 0)):
             long = row[3]
             lat = row[2]
 

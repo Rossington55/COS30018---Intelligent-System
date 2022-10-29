@@ -26,6 +26,7 @@ def main():
             print('Street Name: ' + connection[0])
             print('Direction: ' + connection[1])
             print('Connected SCAT: ' + str(connection[2]))
+            print('===================================')
 
         
 

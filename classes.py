@@ -7,6 +7,7 @@ class Node:
         self._long = long
         self._lat = lat
         self._connections = connections
+        self._flow
         self._adjNodes = getadjnodes(connections)
 
         
@@ -44,6 +45,11 @@ class Node:
         self._distToStart = value  
     def get_distToStart(self):
         return self._distToStart
+    
+    def get_flow(self):
+        return self._flow
+    def set_flow(self, value):
+        self._flow = value
     
     def get_adjNodes(self):
         return self._adjNodes

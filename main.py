@@ -1,6 +1,7 @@
 """
 Traffic Flow Prediction with Neural Networks(SAEs、LSTM、GRU).
 """
+import sys
 import math
 import warnings
 import numpy as np
@@ -12,7 +13,8 @@ import sklearn.metrics as metrics
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from tqdm import tqdm
-from classes import Node, Map
+from scipy import interpolate
+from classes import Node
 warnings.filterwarnings("ignore")
 
 
@@ -64,7 +66,12 @@ def eva_regress(y_true, y_pred):
     print('rmse:%f' % math.sqrt(mse))
     print('r2:%f' % r2)
 
-
+def time_to_interval(time):
+    split = time.split()
+    hms = split[1].split(":")
+    min = int(hms[1])/(60)
+    time =int(hms[0]) + min
+    return time/.25
 
 def plot_results(y_true, y_preds, names, scat):
     """Plot
@@ -107,23 +114,72 @@ def initialise_map(file):
         
     return nodes
 
-def main():
+def get_Flow(y_preds, time):
+    itr = time_to_interval(time)
+    arr = []
+    for i in range(96):
+        arr.append(i)
+    return np.interp(itr, arr, y_preds)
+
+
+def findFlowForSearch(scat, time):
+    biDir = 'model/biDir/'
+    models = [biDir]
+    names = ['Bidirectional']
+    scats = []
+    scats.append(scat)
+    # scats = [2000]
+    # time = '2006-1-10 13:00'
+    
+    for num in tqdm(scats):
+        
+        _, _, X_test, y_test, scaler = process_data('data/data1.xls', 'data/data1.xls', 12, num)
+        y_test = scaler.inverse_transform(y_test.reshape(-1, 1)).reshape(1, -1)[0]  
+        y_preds = []
+        for name, model in zip(names, models):
+            
+            if name == 'SAEs' or name == "SimpleRNN":
+                X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1]))
+            else:
+                X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
+                
+            mdl = load_model(model + str(num) + '.h5')
+            predicted = mdl.predict(X_test)
+            predicted = scaler.inverse_transform(predicted.reshape(-1, 1)).reshape(1, -1)[0]
+            y_preds.append(predicted[:96])
+            
+        return get_Flow(y_preds, time)
+
+def main(argv):
     lstm = 'model/lstm/'
     gru = 'model/gru/'
     saes = 'model/saes/'
     srnn = 'model/srnn/'
     biDir = 'model/biDir/'
-    
-    models = [lstm, gru, saes, srnn, biDir]
-    names = ['LSTM', 'GRU', 'SAEs', 'SimpleRNN', 'Bidirectional']
 
+    # models = [lstm, gru, saes, srnn, biDir]
+    # names = ['LSTM', 'GRU', 'SAEs', 'SimpleRNN', 'Bidirectional']
+    # models = argv[1]
+    # names = argv[2]
+    # scats = argv[3]
+    
+    ####################### Arguments to pass to get flow value %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    models = [biDir]
+    names = ['Bidirectional']
+    scats = [2000]
+    time = '2006-1-10 13:00'
+    ########################
+    
     lag = 12
     file1 = 'data/data1.xls'
     file2 = 'data/data1.xls'
+ 
+    
 
-    for num in tqdm(get_scats_list(file1)):
-        print(num[0])
-        _, _, X_test, y_test, scaler = process_data(file1, file2, lag, num[0])
+    
+    for num in tqdm(scats):
+        
+        _, _, X_test, y_test, scaler = process_data(file1, file2, lag, num)
         y_test = scaler.inverse_transform(y_test.reshape(-1, 1)).reshape(1, -1)[0]
         
         y_preds = []
@@ -133,20 +189,20 @@ def main():
             else:
                 X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
             file = 'images/' + name + '.png'
-            mdl = load_model(model + str(num[0]) + '.h5')
+            mdl = load_model(model + str(num) + '.h5')
             plot_model(mdl, to_file=file, show_shapes=True)
             predicted = mdl.predict(X_test)
             predicted = scaler.inverse_transform(predicted.reshape(-1, 1)).reshape(1, -1)[0]
             y_preds.append(predicted[:96])
             print(name)
-            print(y_preds)
             eva_regress(y_test, predicted)
         
     
-        # plot_results(y_test[: 96], y_preds, names, num[0])
-    nodes = initialise_map(file1)
+        plot_results(y_test[: 96], y_preds, names, num)
+        
+    
     #
 
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv)

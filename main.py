@@ -1,9 +1,12 @@
 """
 Traffic Flow Prediction with Neural Networks(SAEs、LSTM、GRU).
 """
+from re import search
 import sys
 import math
 import warnings
+import classes
+import search
 import numpy as np
 import pandas as pd
 from data.data import process_data, get_scats_list, process_node
@@ -14,7 +17,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from scipy import interpolate
-from classes import Node
+
 warnings.filterwarnings("ignore")
 
 
@@ -110,11 +113,11 @@ def initialise_map(file):
     nodes = {}
     for scat in get_scats_list(file):
         node_data = process_node(file, scat)
-        nodes[str(node_data[0])] = Node(node_data[0], node_data[1], node_data[2], node_data[3])
+        nodes[str(node_data[0])] = classes.Node(node_data[0], node_data[1], node_data[2], node_data[3])
 
     for scat in get_scats_list(file):
-        for connection in nodes[scat].get_connections()[2]:
-            nodes[scat].add_adjNode(nodes[connection])
+        for connection in nodes[str(scat)].get_connections()[2]:
+            nodes[str(scat)].add_adjNode(nodes[str(connection)])
         
     return nodes
 
@@ -168,8 +171,8 @@ def main(argv):
     # scats = argv[3]
     
     ####################### Arguments to pass to get flow value %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    models = [biDir]
-    names = ['Bidirectional']
+    models = [srnn]
+    names = ['SimpleRNN']
     scats = [2000]
     time = '2006-1-10 13:00'
     ########################
@@ -209,4 +212,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    main(sys.argv)
+    # main(sys.argv)
+    search.harrisonsMethod(970, 4040, '2006-1-10 13:00')

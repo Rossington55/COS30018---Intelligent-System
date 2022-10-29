@@ -22,14 +22,17 @@ def distance_betweeen(long1,lat1,long2,lat2):
 def deg_to_rad(deg):
     return deg*(math.pi/180)
 
+#Calculate the speed along the route while accounting for the flow
 def speed_at_flow(flow):
     x = 8 * (math.sqrt(-10*(flow-1000))+100)
     return x/25
 
+#return the time it takes to travel a distance considering the flow along the route
 def timeBetween(flow, dist):
     speed = speed_at_flow(flow)
     return dist/speed
     
+#find the travel cost between two scats sites
 def getCostofScats(node1, node2, time):
     distBetween = distance_betweeen(node1.get_longitude(), node1.get_latitude(), node2.get_longitude(), node2.get_latitude())
     flow = main.findFlowForSearch(node1.get_scat_number(), time)
@@ -38,6 +41,7 @@ def getCostofScats(node1, node2, time):
     costToScat = timeBetween(node1.get_flow(), distBetween)
     return costToScat
 
+#Returns array of string of each scats number from a single route found by search
 def getRouteFromNode(node):
     scatsRoute = []
     scatsRoute.append(node.get_scat_number())
@@ -48,6 +52,7 @@ def getRouteFromNode(node):
     
     return reversed(scatsRoute)
 
+#Harrison! call this method from your GUI 
 def harrisonsMethod(start, end, time):
     routes = []
     nodes = main.initialise_map('data/data1.xls')
@@ -60,8 +65,16 @@ def harrisonsMethod(start, end, time):
                       
     return routes
 
+#Print all found routes in order of scats sites traveled to from start to finish
+def printRoutes(routes):
+    for route in routes:
+        for scats in route:
+            print(scats, " -> ", end =" ")
+        print()
+        
+
 #Call this method and pass the nodes with the start scats site and end scats site and current time
-def aStarSearch(start, end, time, pruned):
+def aStarSearch(start, end, time, routes):
     searchedNodes = []
     goalReached = False
     
@@ -104,6 +117,7 @@ def aStarSearch(start, end, time, pruned):
         if skip:
             openList.append(childNode)
         
+    #Return the goal node which can be unpacked to return the route in order of scats sites traveled to
     if goalReached:
         return curNode
     return

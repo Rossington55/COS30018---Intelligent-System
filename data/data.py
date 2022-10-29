@@ -190,11 +190,8 @@ def process_node(file, scat):
             long = row[3]
             lat = row[2]
 
-
-    df2 = pd.read_excel(file, sheet_name='Data', skiprows=1).fillna(0)
-    df2 = df2.drop_duplicates(subset=['Location'])
-    df2 = df2[['SCATS Number', 'Location', 'NB_LATITUDE', 'NB_LONGITUDE']]
-    df2.drop(df2.loc[df2['SCATS Number']!=scat].index, inplace=True) # Get only streets of indicated SCAT
+    df2 = df1
+    df2 = df1.drop(df2.loc[df2['SCATS Number']!=scat].index) # Get only streets of indicated SCAT
     
     unclean_streets = df2.to_numpy()
     clean_streets = [] # 2D Array, [0]=index, [1]=list ==> [0]=Street Name, [1]=Direction
@@ -221,10 +218,8 @@ def process_node(file, scat):
 
         direction = scat_street[1]
 
-        df_street = pd.read_excel(file, sheet_name='Data', skiprows=1).fillna(0)
-        df_street = df_street.drop_duplicates(subset=['Location'])
-        df_street = df_street[['SCATS Number', 'Location', 'NB_LATITUDE', 'NB_LONGITUDE']] # Get just the SCAT Num, Streets, Long and Lat
-        df_street.drop(df_street.loc[df_street['SCATS Number']==scat].index, inplace=True) # Remove any remaining 'host' scat site entries
+        df_street = df1
+        df_street = df1.drop(df_street.loc[df_street['SCATS Number']==scat].index) # Remove any remaining 'host' scat site entries
 
         df_street = df_street[df_street['Location'].str.contains(scat_street[0] + ' ') == True]
         

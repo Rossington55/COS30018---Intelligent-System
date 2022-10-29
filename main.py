@@ -111,11 +111,11 @@ def plot_results(y_true, y_preds, names, scat):
 
 def initialise_map(file):
     nodes = {}
-    for scat in get_scats_list(file):
+    for scat in tqdm(get_scats_list(file)):
         node_data = process_node(file, scat[0])
         nodes[str(node_data[0])] = classes.Node(node_data[0], node_data[1], node_data[2], node_data[3])
 
-    for scat in get_scats_list(file):
+    for scat in tqdm(get_scats_list(file)):
         if nodes[str(scat[0])].get_connections() is not None:
             for connection in nodes[str(scat[0])].get_connections():
                 nodes[str(scat[0])].add_adjNode(nodes[str(connection[2])])
@@ -156,7 +156,7 @@ def findFlowForSearch(scat, time):
             predicted = scaler.inverse_transform(predicted.reshape(-1, 1)).reshape(1, -1)[0]
             y_preds.append(predicted[:96])
             
-        return get_Flow(y_preds, time)
+        return get_Flow(y_preds[0], time)
 
 def main(argv):
     lstm = 'model/lstm/'
@@ -214,4 +214,5 @@ def main(argv):
 
 if __name__ == '__main__':
     # main(sys.argv)
-    search.harrisonsMethod(970, 4040, '2006-1-10 13:00')
+    # print(findFlowForSearch(4040, '2006-1-10 13:00'))
+    search.harrisonsMethod(970, 4043, '2006-1-10 13:00')

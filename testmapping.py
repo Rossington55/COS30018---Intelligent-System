@@ -18,6 +18,7 @@ def main():
 
     for scat in get_scats_list(file1):
         node = process_node(file1, scat[0])
+        print('===================================')
         print('SCAT : ' + str(node[0]))
         print('Longitude : ' + str(node[1]))
         print('Latitude : ' + str(node[2]))
@@ -26,7 +27,7 @@ def main():
             print('Street Name: ' + connection[0])
             print('Direction: ' + connection[1])
             print('Connected SCAT: ' + str(connection[2]))
-            print('===================================')
+            print('--------------------------------------')
 
         
 

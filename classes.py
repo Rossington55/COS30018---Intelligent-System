@@ -1,13 +1,12 @@
 
 class Node:
-    def __init__(self, X, Y, scat, long, lat, connections, adjNodes):
-        self._x = X
-        self._y = Y
+    _flow = ''
+
+    def __init__(self, scat, long, lat, connections, adjNodes):
         self._scat = scat
         self._long = long
         self._lat = lat
         self._connections = connections
-        self._flow
         self._adjNodes = adjNodes
 
         

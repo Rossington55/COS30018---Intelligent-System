@@ -195,8 +195,9 @@ def process_node(file, scat):
 
     df2 = pd.read_excel(file, sheet_name='Data', skiprows=1).fillna(0)
     df2 = df2.drop_duplicates(subset=['Location'])
-    df2.drop(df2.loc[df2['SCATS Number']!=scat].index, inplace=True) # Get only streets of indicated SCAT
     df2 = df2[['SCATS Number', 'Location', 'NB_LATITUDE', 'NB_LONGITUDE']]
+    df2.drop(df2.loc[df2['SCATS Number']!=scat].index, inplace=True) # Get only streets of indicated SCAT
+    
     unclean_streets = df2.to_numpy()
     clean_streets = [] # 2D Array, [0]=index, [1]=list ==> [0]=Street Name, [1]=Direction
     for street in unclean_streets:

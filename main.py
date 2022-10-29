@@ -112,12 +112,18 @@ def plot_results(y_true, y_preds, names, scat):
 def initialise_map(file):
     nodes = {}
     for scat in get_scats_list(file):
-        node_data = process_node(file, scat)
-        nodes[str(node_data[0])] = classes.Node(node_data[0], node_data[1], node_data[2], node_data[3])
+        print(str(scat[0]) + ' started')
+        node_data = process_node(file, scat[0])
+        empty = []
+        nodes[str(node_data[0])] = classes.Node(node_data[0], node_data[1], node_data[2], node_data[3], empty)
+        print(str(scat[0]) + ' ended')
+    print('Checkpoint 1')
 
     for scat in get_scats_list(file):
-        for connection in nodes[str(scat)].get_connections()[2]:
-            nodes[str(scat)].add_adjNode(nodes[str(connection)])
+        for connection in nodes[str(scat[0])].get_connections()[2]:
+            nodes[str(scat[0])].add_adjNode(nodes[str(connection)])
+
+    print('Checkpoint 2')
         
     return nodes
 

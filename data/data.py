@@ -184,14 +184,12 @@ def process_node(file, scat):
     df1 = pd.read_excel(file, sheet_name='Data', skiprows=1).fillna(0)
     df1 = df1.drop_duplicates(subset=['Location'])
     df1 = df1[['SCATS Number', 'Location', 'NB_LATITUDE', 'NB_LONGITUDE']] # Get just the SCAT Num, Streets, Long and Lat
-    # df_val = df1.drop_duplicates(subset=['SCATS Number'])
+
     for row in df1.to_numpy():
         if ((row[0] == scat) and (row[3] != 0) and (row[2] != 0)):
             long = row[3]
             lat = row[2]
 
-    #print('Long: ' + str(long))
-    #print('Lat: ' + str(lat))
 
     df2 = pd.read_excel(file, sheet_name='Data', skiprows=1).fillna(0)
     df2 = df2.drop_duplicates(subset=['Location'])
@@ -211,17 +209,16 @@ def process_node(file, scat):
         else: # Street has a space in it
             street.append(split_street[0] + ' ' + split_street[1])
             street.append(split_street[2])
-        #print('Street 0: ' + street[0])
-        #print('Street 1: ' + street[1])
+
         clean_streets.append(street)
 
     street_connections = []
     for scat_street in clean_streets:
-        #print('Scat Street: ' + str(scat_street))
+
         street_con = []
         street_con.append(scat_street[0])
         street_con.append(scat_street[1])
-        #direction = get_opposite_direction(scat_street[1])
+
         direction = scat_street[1]
 
         df_street = pd.read_excel(file, sheet_name='Data', skiprows=1).fillna(0)
@@ -230,14 +227,10 @@ def process_node(file, scat):
         df_street.drop(df_street.loc[df_street['SCATS Number']==scat].index, inplace=True) # Remove any remaining 'host' scat site entries
 
         df_street = df_street[df_street['Location'].str.contains(scat_street[0] + ' ') == True]
-
-        #df_street.drop(df1.loc[df1['Location'].str.contains(scat_street[0] + ' ')].index, inplace=True) # Remove where street name is not same
-        
-        # df_street.drop(df_street.loc[df1['Location'].split()[1]!=direction].index, inplace=True) # Remove where direction is not opposite (pointing towards) SCAT Not necessarily needed
         
         # Drop rows based on direction of travel at SCAT based on opposite direction of origin SCAT
         connected_scat = sort_streets_by_direction(df_street, direction, long, lat)
-        #print('Connection SCAT: ' + str(connected_scat))
+
         if connected_scat is not None:
             street_con.append(connected_scat[0])
             street_connections.append(street_con)

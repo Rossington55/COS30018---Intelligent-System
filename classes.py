@@ -1,13 +1,14 @@
 
 class Node:
     _flow = ''
+    _adjNodes = []
+    tDist = 0
 
-    def __init__(self, scat, long, lat, connections, adjNodes):
+    def __init__(self, scat, long, lat, connections):
         self._scat = scat
         self._long = long
         self._lat = lat
         self._connections = connections
-        self._adjNodes = adjNodes
 
         
     def get_scat_number(self):
@@ -20,7 +21,9 @@ class Node:
         return self._connections
 
     def add_adjNode(self, node):
-        _adjNodes.append(node)
+        self._adjNodes.append(node)
+    def get_adjNodes(self):
+        return self._adjNodes
 
     #to add
     #method to get distance to starting node

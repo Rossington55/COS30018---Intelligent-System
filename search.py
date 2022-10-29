@@ -6,7 +6,11 @@ import math
 def distToGoal(node):
     return node.distToGoal
 
-def distance_betweeen(long1,lat1,long2,lat2):
+def distance_betweeen(node1, node2):
+    long1 = node1.get_longitude()
+    long2 = node2.get_longitude()
+    lat1 = node1.get_latitude()
+    lat2 = node2.get_latitude()
     LAT_corrected = lat1 + 0.00155
     LONG_corrected = long1 + 0.00113
     LAT_corrected2 = lat2 + 0.00155
@@ -34,7 +38,7 @@ def timeBetween(flow, dist):
     
 #find the travel cost between two scats sites
 def getCostofScats(node1, node2, time):
-    distBetween = distance_betweeen(node1.get_longitude(), node1.get_latitude(), node2.get_longitude(), node2.get_latitude())
+    distBetween = distance_betweeen(node1, node2)
     flow = main.findFlowForSearch(node1.get_scat_number(), time)
     node1.set_flow(flow)
     
@@ -57,8 +61,11 @@ def harrisonsMethod(start, end, time):
     routes = []
     nodes = main.initialise_map('data/data1.xls')
     
-    sNode = nodes.get(start)
-    eNode = nodes.get(end)
+    sNode = nodes.get(str(start))
+    eNode = nodes.get(str(end))
+
+    print('Scat Start: ' + str(sNode.get_scat_number()))
+    print('Scat End: ' + str(eNode.get_scat_number()))
     
     for i in range(5):
         routes.append(getRouteFromNode(aStarSearch(sNode, eNode, time, routes)))
@@ -71,6 +78,9 @@ def printRoutes(routes):
         for scats in route:
             print(scats, " -> ", end =" ")
         print()
+
+def returnDistToGoal(node):
+    return node.get_distToGoal()
         
 
 #Call this method and pass the nodes with the start scats site and end scats site and current time
@@ -80,13 +90,15 @@ def aStarSearch(start, end, time, routes):
     
     openList = [] 
     openList.append(start)
+    curNode = ''
     
-    while openList.count > 0:
+    while len(openList) > 0:
         curNode = openList.pop()
+        curNode.set_distToStart(distance_betweeen(curNode, start))
         
-        for i in len(openList):
-            if curNode.tDist > openList[i].tDist:
-                curNode = openList[i]          
+        for i in openList:
+            if curNode.tDist > i.tDist:
+                curNode = i          
         
         searchedNodes.append(curNode)
         
@@ -96,17 +108,19 @@ def aStarSearch(start, end, time, routes):
         
         childNodes = []
         #Check each street/scatsSite from current node
-        for adjNode in curNode.adjNodes:
+        for adjNode in curNode.get_adjNodes():
             adjNode.parentNode = curNode
+            adjNode.set_distToGoal(distance_betweeen(adjNode, end))
+            adjNode.set_distToStart(distance_betweeen(adjNode, start))
             childNodes.append(adjNode)
     
-        childNodes.sort(key=distToGoal)
+        childNodes.sort(key=returnDistToGoal)
         
         for childNode in childNodes:
             skip = False
             #add the cost between the start and the current node with the cost between the current node and the next node
-            childNode.distToStart = curNode.distToStart + getCostofScats(curNode, childNode, time) 
-            childNode.tDist = childNode.distToStart + childNode.distToGoal
+            childNode._distToStart = curNode.get_distToStart() + getCostofScats(curNode, childNode, time) 
+            childNode.tDist = childNode.get_distToStart() + childNode.get_distToGoal()
             childNode.parentNode = curNode
             
             for cell in openList:
@@ -119,5 +133,7 @@ def aStarSearch(start, end, time, routes):
         
     #Return the goal node which can be unpacked to return the route in order of scats sites traveled to
     if goalReached:
+        print('Goal Reached')
         return curNode
+    print('No Goal Reached')
     return

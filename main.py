@@ -11,6 +11,7 @@ from keras.utils.vis_utils import plot_model
 import sklearn.metrics as metrics
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+from tqdm import tqdm
 warnings.filterwarnings("ignore")
 
 
@@ -48,18 +49,20 @@ def eva_regress(y_true, y_pred):
         y_true: List/ndarray, ture data.
         y_pred: List/ndarray, predicted data.
     """
-
+    
     mape = MAPE(y_true, y_pred)
     vs = metrics.explained_variance_score(y_true, y_pred)
     mae = metrics.mean_absolute_error(y_true, y_pred)
     mse = metrics.mean_squared_error(y_true, y_pred)
     r2 = metrics.r2_score(y_true, y_pred)
+
     print('explained_variance_score:%f' % vs)
     print('mape:%f%%' % mape)
     print('mae:%f' % mae)
     print('mse:%f' % mse)
     print('rmse:%f' % math.sqrt(mse))
     print('r2:%f' % r2)
+
 
 
 def plot_results(y_true, y_preds, names, scat):
@@ -118,16 +121,17 @@ def main():
     lstm = 'model/lstm/'
     gru = 'model/gru/'
     saes = 'model/saes/'
-    rnn = 'model/srnn/'
+    srnn = 'model/srnn/'
+    biDir = 'model/biDir/'
     
-    models = [lstm, gru, saes, rnn]
-    names = ['LSTM', 'GRU', 'SAEs', 'SimpleRNN']
+    models = [lstm, gru, saes, srnn, biDir]
+    names = ['LSTM', 'GRU', 'SAEs', 'SimpleRNN', 'Bidirectional']
 
     lag = 12
     file1 = 'data/data1.xls'
     file2 = 'data/data1.xls'
 
-    for num in get_scats_list(file1):
+    for num in tqdm(get_scats_list(file1)):
         print(num[0])
         _, _, X_test, y_test, scaler = process_data(file1, file2, lag, num[0])
         y_test = scaler.inverse_transform(y_test.reshape(-1, 1)).reshape(1, -1)[0]

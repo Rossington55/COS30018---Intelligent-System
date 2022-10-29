@@ -6,6 +6,7 @@ import pandas as pd
 import sys
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 import datetime as dt
+from pathlib import Path
 
 def get_scats_list(train):
     df = pd.read_excel(train, sheet_name='Data', skiprows=1).fillna(0)
@@ -64,16 +65,19 @@ def process_data(train, test, lags, scat_number):
     # pivotData.drop(columns=pivotData.columns[[1]], 
     # axis=1, 
     # inplace=True)
-    
+    #scatsSites = pivotData['SCATS Number'].tolist()
     pivotData['# Lane Points']=1
     pivotData['% Observed']=100
     pivotData.rename(columns = {'value':'Lane 1 Flow (Veh/5 Minutes)'}, inplace = True)
     pivotData.rename(columns = {'Date':'5 Minutes'}, inplace = True)
-    #scatsSites = pivotData['SCATS Number'].tolist()
+    
     df1 = pivotData.where(pivotData['SCATS Number'] == scat_number).dropna()
     df2 = pivotData.where(pivotData['SCATS Number'] == scat_number).dropna()
     df2 = df1.sort_values(by=['5 Minutes', 'HF VicRoads Internal','variable'])
 
+    filepath = Path('data/out.csv')  
+    filepath.parent.mkdir(parents=True, exist_ok=True)  
+    pivotData.to_csv(filepath) 
     #filter data framne to reduce columns to only whats required (compared to the supplied working data)
     #Cleaning - remove unwanted columns
     # pivot table into same format as supplied data 

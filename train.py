@@ -10,6 +10,7 @@ from data.data import process_data, get_scats_list
 from model import model
 from keras.models import Model
 from keras.callbacks import EarlyStopping
+from tqdm import tqdm
 warnings.filterwarnings("ignore")
 
 
@@ -91,7 +92,7 @@ def main(argv):
     file1 = 'data/data1.xls'
     file2 = 'data/data1.xls'
 
-    for num in get_scats_list(file1):
+    for num in tqdm(get_scats_list(file1)):
         X_train, y_train, _, _, _ = process_data(file1, file2, lag, num[0])
 
         if args.model == 'lstm':
@@ -109,6 +110,10 @@ def main(argv):
         if args.model == 'srnn':
             X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
             m = model.get_srnn([12, 64, 64, 1])
+            train_model(m, X_train, y_train, args.model, config, num[0])
+        if args.model == 'bidir':
+            X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
+            m = model.get_biDir([12, 64, 64, 1])
             train_model(m, X_train, y_train, args.model, config, num[0])
 
 

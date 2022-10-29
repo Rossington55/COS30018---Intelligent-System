@@ -107,10 +107,14 @@ def plot_results(y_true, y_preds, names, scat):
    
 
 def initialise_map(file):
-    nodes = []
+    nodes = {}
     for scat in get_scats_list(file):
         node_data = process_node(file, scat)
-        nodes.append(Node(node_data[0], node_data[1], node_data[2], node_data[3]))
+        nodes[str(node_data[0])] = Node(node_data[0], node_data[1], node_data[2], node_data[3])
+
+    for scat in get_scats_list(file):
+        for connection in nodes[scat].get_connections()[2]:
+            nodes[scat].add_adjNode(nodes[connection])
         
     return nodes
 

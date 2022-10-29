@@ -1,6 +1,6 @@
 
 class Node:
-    def __init__(self, X, Y, scat, long, lat, connections):
+    def __init__(self, X, Y, scat, long, lat, connections, adjNodes):
         self._x = X
         self._y = Y
         self._scat = scat
@@ -8,17 +8,20 @@ class Node:
         self._lat = lat
         self._connections = connections
         self._flow
-        self._adjNodes = getadjnodes(connections)
+        self._adjNodes = adjNodes
 
         
     def get_scat_number(self):
-        return self._x
+        return self._scat
     def get_longitude(self):
-        return self._y
+        return self._long
     def get_latitude(self):
-        return self._x
+        return self._lat
     def get_connections(self):
-        return self._y
+        return self._connections
+
+    def add_adjNode(self, node):
+        _adjNodes.append(node)
 
     #to add
     #method to get distance to starting node

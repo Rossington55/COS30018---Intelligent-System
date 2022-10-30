@@ -2,10 +2,32 @@
 Defination of NN model
 """
 from tensorflow import keras
-from keras.layers import Dense, Dropout, Activation, SimpleRNN, LSTM, GRU
+from keras.layers import Dense, Dropout, Activation, SimpleRNN, LSTM, GRU, Bidirectional
 #from keras.layers.recurrent import LSTM, GRU
 from keras.models import Sequential
 
+    
+    
+
+def get_biDir(units):
+    
+    """BaseRNN(Base recurrent neural network)
+    Build SimpleRNN Model.
+
+    # Arguments
+        units: List(int), number of input, output and hidden units.
+    # Returns
+        model: Model, nn model.
+    """
+    
+    model = Sequential()
+    model.add(Bidirectional(LSTM(units[1], input_shape=(units[0], 1), return_sequences=True)))
+    model.add(Bidirectional(LSTM(units[2])))
+    model.add(Dropout(0.2))
+    model.add(Dense(units[3], activation='sigmoid'))
+
+
+    return model
 
 #If input is < 0 'relu' converts input to be 0. All other positive inputs are unchanged
 def get_srnn(units):
@@ -24,7 +46,7 @@ def get_srnn(units):
     model.add(SimpleRNN(units[2]))
     model.add(Dropout(0.2))
     model.add(Dense(units[3], activation='relu'))
-    
+
     #print(model.summary())
     
     return model

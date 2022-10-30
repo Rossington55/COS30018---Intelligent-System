@@ -55,7 +55,7 @@ def eva_regress(y_true, y_pred):
         y_true: List/ndarray, ture data.
         y_pred: List/ndarray, predicted data.
     """
-    
+
     mape = MAPE(y_true, y_pred)
     vs = metrics.explained_variance_score(y_true, y_pred)
     mae = metrics.mean_absolute_error(y_true, y_pred)
@@ -69,12 +69,14 @@ def eva_regress(y_true, y_pred):
     print('rmse:%f' % math.sqrt(mse))
     print('r2:%f' % r2)
 
+
 def time_to_interval(time):
     split = time.split()
     hms = split[1].split(":")
     min = int(hms[1])/(60)
-    time =int(hms[0]) + min
+    time = int(hms[0]) + min
     return time/.25
+
 
 def plot_results(y_true, y_preds, names, scat):
     """Plot
@@ -107,13 +109,14 @@ def plot_results(y_true, y_preds, names, scat):
     fig.autofmt_xdate()
     plt.savefig('foo.png')
     plt.show()
-   
+
 
 def initialise_map(file):
     nodes = {}
     for scat in tqdm(get_scats_list(file)):
         node_data = process_node(file, scat[0])
-        nodes[str(node_data[0])] = classes.Node(node_data[0], node_data[1], node_data[2], node_data[3])
+        nodes[str(node_data[0])] = classes.Node(
+            node_data[0], node_data[1], node_data[2], node_data[3])
 
     for scat in tqdm(get_scats_list(file)):
         if nodes[str(scat[0])].get_connections() is not None:
@@ -123,8 +126,9 @@ def initialise_map(file):
 
     for scat in tqdm(get_scats_list(file)):
         print(str(nodes[str(scat[0])].get_scat_number()))
-        
+
     return nodes
+
 
 def get_Flow(y_preds, time):
     itr = time_to_interval(time)
@@ -142,25 +146,30 @@ def findFlowForSearch(scat, time):
     scats.append(scat)
     # scats = [2000]
     # time = '2006-1-10 13:00'
-    
+
     for num in tqdm(scats):
-        
-        _, _, X_test, y_test, scaler = process_data('data/data1.xls', 'data/data1.xls', 12, num)
-        y_test = scaler.inverse_transform(y_test.reshape(-1, 1)).reshape(1, -1)[0]  
+
+        _, _, X_test, y_test, scaler = process_data(
+            'data/data1.xls', 'data/data1.xls', 12, num)
+        y_test = scaler.inverse_transform(
+            y_test.reshape(-1, 1)).reshape(1, -1)[0]
         y_preds = []
         for name, model in zip(names, models):
-            
+
             if name == 'SAEs' or name == "SimpleRNN":
                 X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1]))
             else:
-                X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
-                
+                X_test = np.reshape(
+                    X_test, (X_test.shape[0], X_test.shape[1], 1))
+
             mdl = load_model(model + str(num) + '.h5')
             predicted = mdl.predict(X_test)
-            predicted = scaler.inverse_transform(predicted.reshape(-1, 1)).reshape(1, -1)[0]
+            predicted = scaler.inverse_transform(
+                predicted.reshape(-1, 1)).reshape(1, -1)[0]
             y_preds.append(predicted[:96])
-            
+
         return get_Flow(y_preds[0], time)
+
 
 def main(argv):
     lstm = 'model/lstm/'
@@ -174,49 +183,47 @@ def main(argv):
     # models = argv[1]
     # names = argv[2]
     # scats = argv[3]
-    
-    ####################### Arguments to pass to get flow value %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    # Arguments to pass to get flow value %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     models = [srnn]
     names = ['SimpleRNN']
     scats = [2000]
     time = '2006-1-10 13:00'
     ########################
-    
+
     lag = 12
     file1 = 'data/data1.xls'
     file2 = 'data/data1.xls'
- 
-    
 
-    
     for num in tqdm(scats):
-        
+
         _, _, X_test, y_test, scaler = process_data(file1, file2, lag, num)
-        y_test = scaler.inverse_transform(y_test.reshape(-1, 1)).reshape(1, -1)[0]
-        
+        y_test = scaler.inverse_transform(
+            y_test.reshape(-1, 1)).reshape(1, -1)[0]
+
         y_preds = []
         for name, model in zip(names, models):
             if name == 'SAEs' or name == "SimpleRNN":
                 X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1]))
             else:
-                X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
+                X_test = np.reshape(
+                    X_test, (X_test.shape[0], X_test.shape[1], 1))
             file = 'images/' + name + '.png'
             mdl = load_model(model + str(num) + '.h5')
             plot_model(mdl, to_file=file, show_shapes=True)
             predicted = mdl.predict(X_test)
-            predicted = scaler.inverse_transform(predicted.reshape(-1, 1)).reshape(1, -1)[0]
+            predicted = scaler.inverse_transform(
+                predicted.reshape(-1, 1)).reshape(1, -1)[0]
             y_preds.append(predicted[:96])
             print(name)
             eva_regress(y_test, predicted)
-        
-    
+
         plot_results(y_test[: 96], y_preds, names, num)
-        
-    
+
     #
 
 
 if __name__ == '__main__':
     # main(sys.argv)
     # print(findFlowForSearch(4040, '2006-1-10 13:00'))
-    search.printRoutes(search.harrisonsMethod(970, 4043, '2006-1-10 13:00'))
+    search.printRoutes(search.harrisonsMethod(4051, 2825, '2006-1-10 13:00'))

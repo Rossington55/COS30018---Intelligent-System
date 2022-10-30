@@ -1,14 +1,15 @@
 
 class Node:
-    _flow = ''
-    _adjNodes = []
-    tDist = 0
+    
 
     def __init__(self, scat, long, lat, connections):
         self._scat = scat
         self._long = long
         self._lat = lat
         self._connections = connections
+        self._flow = ''
+        self._adjNodes = []
+        self.tDist = 0
 
         
     def get_scat_number(self):

@@ -116,14 +116,10 @@ def initialise_map(file):
         nodes[str(node_data[0])] = classes.Node(node_data[0], node_data[1], node_data[2], node_data[3])
 
     for scat in tqdm(get_scats_list(file)):
-        print('SCAT: ' + str(scat[0]))
         if nodes[str(scat[0])].get_connections() is not None:
             for connection in nodes[str(scat[0])].get_connections():
-                print('Connection: ' + str(connection))
                 linkedNode = nodes[str(connection[2])]
-                print(str(linkedNode.get_adjNodes()))
                 nodes[str(scat[0])].add_adjNode(linkedNode)
-        print('========================')
 
     for scat in tqdm(get_scats_list(file)):
         print(str(nodes[str(scat[0])].get_scat_number()))

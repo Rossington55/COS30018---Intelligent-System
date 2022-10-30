@@ -56,9 +56,6 @@ class Node:
     def set_flow(self, value):
         self._flow = value
     
-    def get_adjNodes(self):
-        return self._adjNodes
-    
     
     #collection of all interconnecting streets as nodes
 class Map:

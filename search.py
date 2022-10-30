@@ -68,7 +68,9 @@ def harrisonsMethod(start, end, time):
     print('Scat End: ' + str(eNode.get_scat_number()))
     
     for i in range(5):
-        routes.append(getRouteFromNode(aStarSearch(sNode, eNode, time, routes)))
+        route = aStarSearch(sNode, eNode, time, routes)
+        if route is not None:
+            routes.append(getRouteFromNode(route))
                       
     return routes
 
@@ -95,6 +97,12 @@ def aStarSearch(start, end, time, routes):
     while len(openList) > 0:
         curNode = openList.pop()
         curNode.set_distToStart(distance_betweeen(curNode, start))
+        print('--------------------------------------')
+        print('--------------------------------------')
+        print('--------------------------------------')
+        print('Current Node: ' + str(curNode.get_scat_number()))
+        print('Distance to Start: ' + str(curNode.get_distToStart()))
+        print('--------------------------------------')
         
         for i in openList:
             if curNode.tDist > i.tDist:
@@ -112,6 +120,9 @@ def aStarSearch(start, end, time, routes):
             adjNode.parentNode = curNode
             adjNode.set_distToGoal(distance_betweeen(adjNode, end))
             adjNode.set_distToStart(distance_betweeen(adjNode, start))
+            print('Child Node: ' + str(adjNode.get_scat_number()))
+            print('Distance to End: ' + str(adjNode.get_distToGoal()))
+            print('--------------------------------------')
             childNodes.append(adjNode)
     
         childNodes.sort(key=returnDistToGoal)

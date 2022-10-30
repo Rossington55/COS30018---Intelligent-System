@@ -215,4 +215,4 @@ def main(argv):
 if __name__ == '__main__':
     # main(sys.argv)
     # print(findFlowForSearch(4040, '2006-1-10 13:00'))
-    search.harrisonsMethod(970, 4043, '2006-1-10 13:00')
+    search.printRoutes(search.harrisonsMethod(970, 4043, '2006-1-10 13:00'))
